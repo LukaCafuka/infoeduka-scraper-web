@@ -1,0 +1,158 @@
+﻿@using System.Diagnostics
+@using Microsoft.AspNetCore.Identity.Data
+@rendermode InteractiveServer
+@inject IeAuthentication AuthService
+@page "/auth"
+
+<div class="bg-white rounded-lg border-gray-200 shadow-xl shadow-gray-400 dark:shadow-gray-900 dark:bg-slate-900 sm:w-1/2 w-auto p-6">
+    <div class="">
+        <h2 class="text-2xl text-center font-bold dark:text-white mb-4">Start scraping by entering your <span class="font-extrabold">Infoeduka credentials</span></h2>
+    </div>
+    <div class="flex flex-col gap-4 px-12 justify-center items-center space-y-4 sm:flex-col sm:justify-center sm:space-y-0">
+        <div class="relative grow basis- w-full">
+            <input type="text" required="required" id="floating_filled" class="block pr-12 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" name="username" @bind="Username" placeholder=" "/>
+            <label for="floating_filled" class="absolute text-sm text-gray-500 bg-white dark:bg-gray-900 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Username</label>
+        </div>
+
+        <div class="relative grow basis-full w-full">
+            <input required="required" id="floating_filled2" class="block pr-12 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" name="password" @bind="Password" @bind:event="oninput" type="password" placeholder=" "/>
+            <label for="floating_filled2" class="absolute text-sm text-gray-500 bg-white dark:bg-gray-900 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password</label>
+        </div>
+        
+        <button class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center " @onmouseover="setTooltip" disabled="@_isButtonDisabled" type="submit" @onclick="CreateAuth">Start!</button>
+        @if (tooltipShow)
+        {
+            <div role="tooltip" class="absolute text-center z-10 bottom-0 inline-block px-2 py-1.5 text-sm font-medium text-white bg-gray-900 rounded shadow-sm tooltip dark:bg-gray-700">
+                We <b>do not</b> store any sensitive data on our servers, such as <b>passwords or usernames.</b> <br/> If you are unsure about this, check out the <a href="#" class="font-medium text-blue-600 underline dark:text-blue-500 hover:no-underline">source code.</a>
+            </div>
+        }
+
+
+        <LoadingSpinner IsVisible="@isLoading" />
+        
+    </div>
+    @switch (_messageCode)
+    {
+        case 0 :
+            break;
+        case 1:
+            <div class="flex items-center w-full p-4 my-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                    </svg>
+                    <span class="sr-only">Check icon</span>
+                </div>
+                <div class="ms-3 text-sm text-green-500 font-normal">Authenticated successfully!</div>
+            </div>
+            break;
+        case 2:
+            <div class="flex items-center w-full p-4 my-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ms-3 text-red-500 text-sm font-normal">Incorrect credentials supplied</div>
+            </div>
+            break;
+        case 3:
+            <div class="flex items-center w-full p-4 my-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ms-3 text-red-500 text-sm font-normal">Please enter your username and password</div>
+            </div>
+            break;
+        case 4:
+            <div class="flex items-center w-full p-4 my-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ms-3 text-red-500 text-sm font-normal">Password must be at least 8 characters long</div>
+            </div>
+            break;
+    }
+</div>
+
+@code {
+    private string Username { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+    private int _messageCode;
+    
+    public bool tooltipShow { get; set; } = false;
+    bool _isButtonDisabled = false;
+    public string LoginCookie = string.Empty;
+
+    private bool isLoading = false;
+
+    public async Task setTooltip()
+    {
+        tooltipShow = true;
+        await Task.Delay(5000);
+        tooltipShow = false;
+    }
+
+    // Inject the ILogger service
+    [Inject] private ILogger<Authentication> Logger { get; set; } = default!;
+
+    async Task CreateAuth()
+    {
+        Logger.LogInformation("Start button was clicked");
+        isLoading = true;
+        _messageCode = 0;
+        
+        _isButtonDisabled = true;
+        StateHasChanged();
+        if (!(string.IsNullOrWhiteSpace(Password) && string.IsNullOrWhiteSpace(Username)))
+        {
+            if (Password.Length < 8)
+            {
+                _messageCode = 4;
+                isLoading = false;
+                Logger.LogError("Password must be at least 8 characters");
+            }
+            else
+            {
+                AuthService.SetCredentials(Username, Password);
+                Logger.LogInformation($"IEAuthentication object created successfully \n{AuthService}");
+
+                LoginCookie = await AuthService.GetCookie();
+                if (LoginCookie != null)
+                {
+                    isLoading = false;
+                    _messageCode = 1;
+                }
+                else
+                {
+                    isLoading = false;
+                    _messageCode = 2;
+                }
+            }
+        }
+        else
+        {
+            _messageCode = 3;
+            isLoading = false;
+            Logger.LogWarning("Username or password is missing!");
+        }
+        
+
+        StateHasChanged();
+        await Task.Delay(2000);
+        
+        Username = string.Empty;
+        Password = string.Empty;
+        isLoading = false;
+        _isButtonDisabled = false;
+        StateHasChanged();
+    }
+
+}

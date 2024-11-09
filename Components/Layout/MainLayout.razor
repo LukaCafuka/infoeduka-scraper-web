@@ -1,0 +1,23 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page bg-white min-h-screen border-gray-200 dark:bg-gray-900 relative">
+    
+    <div class="gradient-dark min-h-screen flex flex-col">
+        <div class="navigation relative">
+            <NavMenu/>
+        </div>
+
+        <main class="grow">
+
+
+            <article class="container mx-auto relative">
+                @Body
+            </article>
+        </main>
+        
+        <div class="relative navigation">
+            <FooterLayout/>
+        </div>
+        
+    </div>
+</div>

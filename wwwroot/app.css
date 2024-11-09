@@ -1,0 +1,25 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main-bg-gradient {
+    background-size: 100% 100%;
+    background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
+    background-image: radial-gradient(18% 28% at 18% 71%, #FFFFFF59 6%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #DFB7FFFF 0%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #FFFFFFFF 7%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #F0DCDCFF 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #F4D1D1FF 7%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #F7EDC79C 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #EABEFFF5 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #FFB7B7F5 24%, #073AFF00 100%),linear-gradient(125deg, #FFE1E9FF 1%, #FFEEEEFF 100%);
+}
+
+.gradient-dark {
+    background-size: 100% 100%;
+    background-position: 0px 0px;
+    background-image: linear-gradient(60deg, #A100FF00 1%, #A100FF0F 24%, #A100FF00 35%, #5A5AFF21 44%, #6E9BFF2E 50%, #AA6BFF12 68%, #AA6BFF00 84%, #71C4FF00 100%);
+}
+
+.gradient-dark::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeBlend mode='screen'/%3E%3C/filter%3E%3Crect width='1000' height='1000' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+    mix-blend-mode: soft-light;
+    filter: grayscale(1);
+}
