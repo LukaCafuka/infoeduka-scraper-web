@@ -17,7 +17,8 @@ namespace InfoedukaScraper
             {
                 if (value.Length < 8)
                 {
-                    throw new Exception("Password must be at least 8 characters long");
+                    Debug.WriteLine("Password is too short.");
+                    password = value;
                 }
                 else
                 {
@@ -27,15 +28,30 @@ namespace InfoedukaScraper
             
         }
 
-        public void SetCredentials(string username, string password)
+        public int CheckCredentials(string inputUsername, string inputPassword)
         {
-            Username = username;
-            Password = password;
+            if (!(string.IsNullOrWhiteSpace(inputUsername) && string.IsNullOrWhiteSpace(inputPassword)))
+            {
+                if (inputPassword.Length < 8)
+                {
+                    return 2;
+                }
+                else
+                {
+                    Username = inputUsername;
+                    Password = inputPassword;
+                    return 0;
+                }
+
+                return 1;
+            }
+
+            return 1;
         }
 
         public override string ToString()
         {
-            return $"Username: {Username}\nPassword: {Password.Substring(2, 2)}";
+            return $"Username: {Username}\nPassword Length: {Password.Length}";
         }
 
         // function to create the request to the Infoeduka login page
