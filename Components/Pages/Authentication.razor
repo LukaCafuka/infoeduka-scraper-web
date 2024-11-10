@@ -1,7 +1,10 @@
 ﻿@using System.Diagnostics
+@using Microsoft.AspNetCore.Http.HttpResults
 @using Microsoft.AspNetCore.Identity.Data
+@using Microsoft.AspNetCore.Mvc
 @rendermode InteractiveServer
 @inject IeAuthentication AuthService
+@inject NavigationManager Navigation
 
 <div class="bg-white rounded-lg border-gray-200 shadow-xl shadow-gray-400 dark:shadow-gray-900 dark:bg-slate-900 sm:w-1/2 w-auto p-6">
     <div class="">
@@ -82,10 +85,13 @@
                 if (LoginCookie != null)
                 {
                     isLoading = false;
-                    textMessage = "Auth successful";
+                    textMessage = "Auth successful, redirecting...";
                     showMessage = true;
                     statusMessage = 0;
-
+                    Logger.LogInformation($"Cookie is {LoginCookie}");
+                    AuthService.LoginCookie = LoginCookie;
+                    await Task.Delay(5000);
+                    Navigation.NavigateTo("/fetch");
                 }
                 else
                 {

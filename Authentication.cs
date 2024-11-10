@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace InfoedukaScraper
 {
-    public class IeAuthentication()
+    public class IeAuthentication
     {
+
         private string Username { get; set; }
         private string password;
         private string Password
@@ -28,6 +29,12 @@ namespace InfoedukaScraper
             
         }
 
+        public IeAuthentication()
+        {
+            Username = string.Empty;
+            password = string.Empty;
+        }
+        
         public int CheckCredentials(string inputUsername, string inputPassword)
         {
             if (!(string.IsNullOrWhiteSpace(inputUsername) && string.IsNullOrWhiteSpace(inputPassword)))
@@ -53,6 +60,8 @@ namespace InfoedukaScraper
         {
             return $"Username: {Username}\nPassword Length: {Password.Length}";
         }
+        
+        public string LoginCookie { get; set; }
 
         // function to create the request to the Infoeduka login page
         public async Task<string> GetCookie()

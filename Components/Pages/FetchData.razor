@@ -1,0 +1,18 @@
+﻿@page "/fetch"
+@rendermode InteractiveServer
+@inject IeAuthentication AuthService
+
+
+@if (!string.IsNullOrEmpty(AuthService.LoginCookie))
+{
+    <MessageBox Message="Cookie found!" Status=0 isDisplayed=true></MessageBox>
+}
+else
+{
+    <MessageBox Message="No cookie found..." Status=1 isDisplayed=true></MessageBox>
+}
+
+@code {
+    
+    
+}  

@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 
-builder.Services.AddScoped<IeAuthentication>(_ => new IeAuthentication());
+builder.Services.AddScoped<IeAuthentication>();
 
 
 // Add services to the container.
