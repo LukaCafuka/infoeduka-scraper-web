@@ -1,12 +1,24 @@
 using InfoedukaScraper;
 using InfoedukaScraper.Components;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 
-builder.Services.AddScoped<IeAuthentication>();
+builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<IeAuthentication>();
+builder.Services.AddScoped<FetchData>(sp =>
+{
+    Console.WriteLine("Registering FetchData");
+    return new FetchData(sp.GetRequiredService<HttpClient>());
+});
+
+foreach (var service in builder.Services)
+{
+    Console.WriteLine($"Service: {service.ServiceType.FullName}");
+}
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

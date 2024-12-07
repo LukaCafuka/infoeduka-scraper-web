@@ -2,7 +2,6 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Components;
 
 namespace InfoedukaScraper
 {
@@ -75,7 +74,10 @@ namespace InfoedukaScraper
                 CookieContainer = new CookieContainer()
             };
             var client = new HttpClient(handler);
-
+            
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("User-Agent", "InfoedukaScraper/1.0");
+            
             try
             {
 
@@ -92,10 +94,8 @@ namespace InfoedukaScraper
 
                 // send the POST request
                 var response = await client.PostAsync(loginUrl, jsonContent);
-
-                // ensure the response indicates success
+                
                 response.EnsureSuccessStatusCode();
-
                 // get cookies from the response URI
                 Uri responseUri = response.RequestMessage.RequestUri;
                 CookieCollection cookies = handler.CookieContainer.GetCookies(responseUri);
@@ -118,7 +118,7 @@ namespace InfoedukaScraper
             catch (HttpRequestException ex)
             {
                 // clear cookies on failure to allow a fresh attempt next time
-                Console.WriteLine("Login failed: " + ex.Message);
+                Console.WriteLine("Login failed: " + ex.Message + "\n" + ex.StackTrace);
                 return null;
             }
             finally
